@@ -21,10 +21,10 @@ try{
                 <input type="hidden" name="id" value="<?php echo $paciente['idPaciente'];?>" />
                 <input type="numeric" name="identificacion" placeholder="Cédula"
                     value="<?php echo $paciente['pacIdentificacion'];?>" requerid>
-                <label>Nombres:</label>
-                <input type="text" name="nombres" placeholder="Nombres:" value="<?php echo $paciente['pacNombre'];?>">
-                <label>Apellidos:</label>
-                <input type="text" name="apellidos" placeholder="Apellidos:"
+                <label>Nombre:</label>
+                <input type="text" name="nombres" placeholder="Nombre:" value="<?php echo $paciente['pacNombre'];?>">
+                <label>Apellido:</label>
+                <input type="text" name="apellidos" placeholder="Apellido:"
                     value="<?php echo $paciente['pacApellidos'];?>">
                 <label>Fecha:</label>
                 <input type="date" name="fecha" placeholder="Fecha:"
@@ -37,10 +37,20 @@ try{
                     <option value="Masculino">Masculino</option>
                     }
                 </select>
+                <label>Teléfono:</label>
                 <input type="numeric" name="telefono" placeholder="Teléfono:"
                     value="<?php echo $paciente['pacTelefono'];?>">
+                <label>Dirección:</label>
                 <input type="text" name="direccion" placeholder="Dirección:"
                     value="<?php echo $paciente['pacDireccion'];?>">
+                    <label>Estado:</label>
+                <select name="estado">
+                    <option>Selecciona una opción</option>
+                    if (<?php echo $medico['estado'];?>){
+                    <option value="activo">activo</option>
+                    <option value="inactivo">inactivo</option>
+                    }
+                </select>
                 <input type="submit" name="enviar" value="Actualizar">
             </form>
             <?php  if(!empty($errores)): ?>

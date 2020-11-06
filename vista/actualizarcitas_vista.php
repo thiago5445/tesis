@@ -7,7 +7,6 @@ try{
 }
 //SELECT PARA MEDICOS
 $medicos = $conexion -> prepare("SELECT * FROM medicos");
-
 $medicos ->execute();
 $medicos = $medicos ->fetchAll();
 if(!$medicos)
@@ -26,13 +25,23 @@ if(!$consultorios)
 	$mensaje .= 'No hay consultorios, por favor registre primero! <br />';
 //SELECT PARA PACIENTES
 $pacientes = $conexion -> prepare("SELECT * FROM pacientes");
-
 $pacientes ->execute();
 $pacientes = $pacientes ->fetchAll();
 if(!$pacientes)
-	$mensaje .= 'No hay pacientes, por favor registre primero! <br />';
+    $mensaje .= 'No hay pacientes, por favor registre primero! <br />';
+    //SELECT PARA CITAS
+$citas = $conexion -> prepare("SELECT * FROM citas");
+$citas ->execute();
+$citas = $citas ->fetchAll();
+if(!$citas)
+    $mensaje .= 'No hay citas, por favor registre primero! <br />';
+    
+
+
 
 ?>
+
+
 <?php include 'plantillas/header.php'; ?>
 <section class="main">
     <div class="wrapp">
@@ -44,18 +53,16 @@ if(!$pacientes)
             <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post">
                 <h2>Actualizar Citas</h2><BR>
                 <label>Fecha:</label>
+
                 <input type="hidden" name="id" value="<?php echo $cita['idcita'];?>" require />
                 <input type="date" name="fecha" placeholder="Fecha:" value="<?php echo $cita['citfecha'];?>" required />
                 <label>Hora:</label>
                 <input type="time" name="hora" value="<?php echo $cita['cithora'];?>" max="20:00" min="10:00" step="60"
                     required>
+
                 <label>Paciente:</label>
-                <select name="paciente" class="mayusculas" required>
-                    <option value="<?php echo $cita['citPaciente'];?>" require></option>
-                    <?php foreach ($pacientes as $Sql2): ?>
-                    <?php echo "<option value='". $Sql2['pacNombre']. "'>". $Sql2['pacNombre']." ". $Sql2['pacApellidos']."</option>"; ?>
-                    <?php endforeach; ?>
-                </select>
+                <input type="text" name="paciente" value="<?php echo $cita['citPaciente'];?>">
+
                 <label>Terapista:</label>
                 <select name="medico" class="mayusculas" required>
                     <option value="<?php echo $cita['citMedico'];?>" require></option>
@@ -63,6 +70,7 @@ if(!$pacientes)
                     <?php echo "<option value='". $Sql['mednombres']. "'>". $Sql['mednombres']." ". $Sql['medapellidos']."</option>"; ?>
                     <?php endforeach; ?>
                 </select>
+
                 <label>Servicios:</label>
                 <select name="servicio" class="mayusculas" required>
                     <option value="<?php echo $cita['citEspecialidades'];?>" require></option>
@@ -70,6 +78,7 @@ if(!$pacientes)
                     <?php echo "<option value='". $Sql2['espNombre']. "'>". $Sql2['espNombre']."</option>"; ?>
                     <?php endforeach; ?>
                 </select>
+
                 <label>Consultorio:</label>
                 <select name="consultorio" class="mayusculas" required>
                     <option value="<?php echo $cita['citConsultorio'];?>" require></option>

@@ -6,11 +6,11 @@
 	}catch(PDOException $e){
 		echo "Error: ". $e->getMessage();
 	}
-	$sql="DELETE FROM pacientes WHERE idPaciente = '$_REQUEST[idPaciente]'";
+	$sql="UPDATE pacientes SET estado = 'inactivo' WHERE idPaciente = '$_REQUEST[idPaciente]'";
 	$resultado = $conexion->query($sql);
 
 	if($resultado == true){
-		header('Location: Pacientes.php');
+		header('Location: cliente1.php');
 		$errores .='Medico eliminado correctamente';
 	}
 ?>

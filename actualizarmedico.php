@@ -20,6 +20,7 @@
 		$correo = limpiarDatos($_POST['correo']);
 		$telefono = limpiarDatos($_POST['telefono']);
 		$especialidad = limpiarDatos($_POST['especialidad']);
+		$estado = limpiarDatos($_POST['estado']);
 		
 		$statement = $conexion->prepare(
 		"UPDATE medicos SET 
@@ -28,7 +29,8 @@
 		medapellidos =:apellidos, 
 		medEspecialidad =:especialidad, 
 		medtelefono =:telefono, 
-		medcorreo =:correo 
+		medcorreo =:correo,
+		estado =:estado
 		WHERE idMedico = :id");
 
 		$statement ->execute(array(
@@ -38,18 +40,19 @@
 		':especialidad'=>$especialidad, 
 		':telefono'=>$telefono, 
 		':correo'=>$correo,
+		':estado'=>$estado,
         ':id'=>$id
         ));
-        header('Location: medicos.php');
+        header('Location: terapista1.php');
 	}else{
 		$id_medico = id_numeros($_GET['idMedico']);
 		if(empty($id_medico)){
-			header('Location: medicos.php');
+			header('Location: terapista1.php');
 		}
 		$medico = obtener_medico_id($conexion,$id_medico);
 		
 		if(!$medico){
-			header('Location: medicos.php');
+			header('Location: terapista1.php');
 		}
 		$medico =$medico[0];
 	}

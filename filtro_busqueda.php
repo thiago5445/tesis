@@ -1,7 +1,10 @@
+<?php session_start();
+if(!isset($_SESSION['usuario'])){
+	header('Location: login.php');
+}
+?>
 <?php
-
 ////////////////// CONEXION A LA BASE DE DATOS ////////////////////////////////////
-
 $host="localhost";
 $usuario="root";
 $contraseña="";
@@ -12,109 +15,113 @@ if ($conexion -> connect_errno)
 {
 	die("Fallo la conexion:(".$conexion -> mysqli_connect_errno().")".$conexion-> mysqli_connect_error());
 }
-////////////////// VARIABLES DE CONSULTA////////////////////////////////////
-
-$where="";
-$nombre=$_POST['xnombre'];
-$carrera=$_POST['xcarrera'];
-$limit=$_POST['xregistros'];
-
-////////////////////// BOTON BUSCAR //////////////////////////////////////
-
+////////////////// VARIABLES DE CONSULTA///////////////////////////////////////////
+$where = "";
+@$paciente = $_POST['xc'];
+@$terapista = $_POST['xt'];
+@$limit = $_POST['xr'];
+////////////////////// BOTON BUSCAR //////////////////////////////////////////////
 if (isset($_POST['buscar']))
 {
-
-	if (empty($_POST['xcarrera']))
+	if (empty($_POST['xt']))
 	{
-		$where="where nombre like '".$nombre."%'";
+		$where="where citPaciente like '%".$paciente."%'";
 	}
 
-	else if (empty($_POST['xnombre']))
+	else if (empty($_POST['xc']))
 	{
-		$where="where carrera='".$carrera."'";
+		$where="where citMedico='".$terapista."'";
 	}
 
 	else
 	{
-		$where="where nombre like '".$nombre."%' and carrera='".$carrera."'";
+		$where="where citPaciente like '%".$paciente."%' and citMedico='".$terapista."'";
 	}
 }
-/////////////////////// CONSULTA A LA BASE DE DATOS ////////////////////////
+/////////////////////// CONSULTA A LA BASE DE DATOS /////////////////////////////
 
-$alumnos="SELECT * FROM alumnos $where $limit";
-$resAlumnos=$conexion->query($alumnos);
-$resCarreras=$conexion->query($alumnos);
+$sql="SELECT * FROM citas $where $limit";
+$consulta_general=$conexion->query($sql);
+$consulta_terapista=$conexion->query($sql);
 
-if(mysqli_num_rows($resAlumnos)==0)
+if(mysqli_num_rows($consulta_general)==0)
 {
 	$mensaje="<h1>No hay registros que coincidan con su criterio de búsqueda.</h1>";
 }
 ?>
-<html lang="es">
-	
-<body>
+
+
 <?php include 'vista/plantillas/header.php'; ?>
-    <section class="main">
-        <div class="wrapp">
-            <?php include 'vista/plantillas/nav.php'; ?>
-            <article>
-                <div class="mensaje">
-                    <h2>REPORTERÍA</h2>
-                </div>
-		<section>
-			<form method="post">
-				<input type="text" placeholder="Nombre..." name="xnombre"/>
-				<select name="xcarrera">
-					<option value="">Carrera </option>
-					<?
-						while ($registroCarreras = $resCarreras->fetch_array(MYSQLI_BOTH))
+<section class="main">
+    <div class="wrapp">
+        <?php include 'vista/plantillas/nav.php'; ?>
+        <article>
+            <div class="mensaje">
+                <h2>REPORTERÍA</h2>
+            </div>
+            <hr>
+            <div class="formulario">
+                <form method="POST" id="reporte">
+                    <input type="text" placeholder="Buscar cliente..." name="xc" />
+                    <select name="xt">
+                        <option value="">Buscar terapista </option>
+                        <?php
+						while ($terapista = $consulta_terapista->fetch_array(MYSQLI_BOTH))
 						{
-							echo '<option value="'.$registroCarreras['carrera'].'">'.$registroCarreras['carrera'].'</option>';
+							echo '<option value="'.$terapista['citMedico'].'">'.$terapista['citMedico'].'</option>';
 						}
 					?>
-				</select>
+                    </select>
+                    <select name="xr">
+                        <option value="">No. de Registros</option>
+                        <option value="limit 3">3</option>
+                        <option value="limit 6">6</option>
+                        <option value="limit 9">9</option>
+                    </select>
+                    <button name="buscar" type="submit">Buscar</button>
+                    <a href="generar_reporte.php" class="agregar" target="_blank">Generar reporte</a>
+                </form>
 
-				<select name="xregistros">
-					<option value="">No. de Registros</option>
-					<option value="limit 3">3</option>
-					<option value="limit 6">6</option>
-					<option value="limit 9">9</option>
-				</select>
-				<button name="buscar" type="submit">Buscar</button>
-			</form>
 
-			<table class="tabla">
-				<tr>
-				<th>#</th>
-                        <th>Fecha</th>
-                        <th>Hora</th>
-                        <th>Cliente</th>
-                        <th>Terapista</th>
-                        <th>Consultorio</th>
-                        <th>Observaciones</th>
-                        <th>Estado</th>
-				</tr>
+                <hr>
+                <div id='div1'>
+                    <table class="tabla">
+                        <tr>
+                            <th>#</th>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Cliente</th>
+                            <th>Terapista</th>
+                            <th>Servicio</th>
+                            <th>Consultorio</th>
+                            <th>Observaciones</th>
+                            <th>Estado</th>
+                        </tr>
 
-				<?php
+                        <?php
 
-				while ($registroAlumnos = $resAlumnos->fetch_array(MYSQLI_BOTH))
+				while ($consulta = $consulta_general->fetch_array(MYSQLI_BOTH))
 				{
-
 					echo'<tr>
-						 <td>'.$registroAlumnos['id_alumno'].'</td>
-						 <td>'.$registroAlumnos['nombre'].'</td>
-						 <td>'.$registroAlumnos['carrera'].'</td>
-						 <td>'.$registroAlumnos['grupo'].'</td>
+						 <td>'.$consulta['idcita'].'</td>
+						 <td>'.$consulta['citfecha'].'</td>
+						 <td>'.$consulta['cithora'].'</td>
+                         <td>'.$consulta['citPaciente'].'</td>
+                         <td>'.$consulta['citMedico'].'</td>
+                         <td>'.$consulta['citEspecialidades'].'</td>
+                         <td>'.$consulta['citConsultorio'].'</td>
+                         <td>'.$consulta['citobservaciones'].'</td>
+                         <td>'.$consulta['citestado'].'</td>
 						 </tr>';
 				}
 				?>
-			</table>
-
-			<?
+                    </table>
+                </div>
+                <?
 				echo $mensaje;
 			?>
-		</section>
-	</body>
-</html>
-
-
+            </div>
+        </article>
+    </div>
+</section>
+<?php include 'vista/plantillas/footer.php'; ?>

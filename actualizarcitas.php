@@ -46,16 +46,16 @@
             ':estado'=>$estado,
             ':observaciones'=>$observaciones
 			));
-        header('Location: citas.php');
+        header('Location: citas1.php');
 	}else{
 		$id_cita = id_numeros($_GET['idcita']);
 		if(empty($id_cita)){
-			header('Location: citas.php');
+			header('Location: citas1.php');
 		}
 		$cita = obtener_cita_id($conexion,$id_cita);
 		
 		if(!$cita){
-			header('Location: citas.php');
+			header('Location: citas1.php');
 		}
 		$cita =$cita[0];
 	}

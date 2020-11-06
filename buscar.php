@@ -10,17 +10,17 @@
       }
 
     $salida = "";
-
-$query = "SELECT * FROM citas WHERE citPaciente NOT LIKE '' ORDER By idcita LIMIT 25";
+	$query = "SELECT * FROM citas ORDER BY citfecha DESC LIMIT 25";
 
     if (isset($_POST['consulta'])) {
     	$q = $conn->real_escape_string($_POST['consulta']);
-    	$query = "SELECT * FROM citas WHERE idcita LIKE '%$q%' OR citPaciente LIKE '%$q%' OR citMedico LIKE '%$q%' OR citEspecialidades LIKE '%$q%'  OR citConsultorio LIKE '%$q%' ";
+    	$query = "SELECT * FROM citas 
+		WHERE citPaciente LIKE '%".$q."%' OR citMedico LIKE '%".$q."%'OR citEspecialidades LIKE '%".$q."%'";
     }
 
     $resultado = $conn->query($query);
 
-    if ($resultado->num_rows>1) {
+    if ($resultado->num_rows>0) {
 		$salida.="<div id='div1'>
 		<table class='tabla'>
 		<thead>
@@ -54,7 +54,7 @@ $query = "SELECT * FROM citas WHERE citPaciente NOT LIKE '' ORDER By idcita LIMI
 				 	}
     	$salida.="</table></div>";
     }else{
-    	$salida.="NO HAY DATOS :(";
+    	$salida.="NO HAY DATOS QUE COINCIDAN A SU CONSULTA...";
     }
     echo $salida;
 

@@ -67,9 +67,20 @@ function Footer(){
       }
 }
 
-require 'reportes/conexion.php';
+require ('reportes/conexion.php');
 
-$consulta = "SELECT * FROM citas";
+/*$paciente="";
+$terapista="";
+$limit="";
+
+$paciente=$_POST['xc'];
+$terapista=$_POST['xt'];
+$limit=$_POST['xr'];
+
+$consulta = "SELECT * FROM citas where citPaciente like '%".$paciente."%' and citMedico = '".$terapista."' and '$limit'";
+$resultado = $mysqli->query($consulta);*/
+
+$consulta = "SELECT * FROM citas order by cithora";
 $resultado = $mysqli->query($consulta);
 
 $pdf = new PDF();
@@ -78,7 +89,7 @@ $pdf->AddPage();
 $pdf->Body();
 
 while($row = $resultado->fetch_assoc()){
-  $pdf->Cell(7, 10, $row['idcita'], 1, 0, 'C', 0);
+  $pdf->Cell(7, 10, $row['idcita'],1, 0,'C',0);
   $pdf->Cell(20,10, $row['citfecha'],1,0,'C',0);
   $pdf->Cell(16,10, $row['cithora'],1,0,'C',0);
   $pdf->Cell(30,10, $row['citPaciente'],1,0,'C',0);

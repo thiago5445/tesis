@@ -21,6 +21,7 @@
 		$sexo = limpiarDatos($_POST['sexo']);
 		$telefono = limpiarDatos($_POST['telefono']);
 		$direccion = limpiarDatos($_POST['direccion']);
+		$estado = limpiarDatos($_POST['estado']);
 								
 		$statement = $conexion->prepare(
 		"UPDATE pacientes SET 
@@ -30,7 +31,8 @@
 		pacFechaNacimiento =:fecha, 
 		pacSexo =:sexo,
 		pacTelefono =:telefono,
-		pacDireccion =:direccion
+		pacDireccion =:direccion,
+		estado =:estado
 		WHERE idPaciente = :id");
 
 		$statement ->execute(array(
@@ -40,19 +42,20 @@
 		':fecha'=>$fecha, 
 		':sexo'=>$sexo, 
 		':telefono'=>$telefono, 
-		':direccion'=>$direccion, 
+		':direccion'=>$direccion,
+		':estado'=>$estado, 
 		':id'=>$id
         ));
-        header('Location: pacientes.php');
+        header('Location: cliente1.php');
 	}else{
 		$id_paciente = id_numeros($_GET['idPaciente']);
 		if(empty($id_paciente)){
-			header('Location: pacientes.php');
+			header('Location: cliente1.php');
 		}
 		$paciente = obtener_paciente_id($conexion,$id_paciente);
 		
 		if(!$paciente){
-			header('Location: pacientes.php');
+			header('Location: cliente1.php');
 		}
 		$paciente =$paciente[0];
 	}

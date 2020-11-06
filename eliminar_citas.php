@@ -10,7 +10,7 @@
 	$resultado = $conexion->query($sql);
 
 	if($resultado == true){
-		header('Location: citas.php');
+		header('Location: citas1.php');
 		$errores .='Cita eliminada correctamente';
 	}
 ?>

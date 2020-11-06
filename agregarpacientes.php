@@ -34,7 +34,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	}
 	if($mensaje==''){
 		$statement = $conexion->prepare(
-		'INSERT INTO pacientes
+		'INSERT INTO pacientes (idPaciente,pacIdentificacion,pacNombre,pacApellidos,
+		pacFechaNacimiento,pacSexo,pacTelefono,pacDireccion)
 		values(null, :id,:nombre,:apellidos,:fecha,:sexo,:telefono,:direccion)');
 
 		$statement ->execute(array(
